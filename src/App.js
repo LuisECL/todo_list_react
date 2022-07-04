@@ -13,7 +13,14 @@ function App() {
 
   useEffect(
     ()=> {
-      filterHandler()
+      // Not working since React 18 all components mount, unmount, then mount agai
+      getLocalTodos()
+    }, []
+  )
+  useEffect(
+    ()=> {
+      filterHandler();
+      saveLocalTodos();
     },
     [todos, status]
   )
@@ -29,6 +36,19 @@ function App() {
       default:
         setFilteredTodos(todos)
         break;
+    }
+  }
+  // Save to local storage
+  const saveLocalTodos = () => {
+      localStorage.setItem("todos", JSON.stringify(todos))
+  }
+  const getLocalTodos = () => {
+    if (localStorage.getItem("todos") === null){
+      localStorage.setItem("todos", JSON.stringify([]))
+    } else {
+      let todoLocal = JSON.parse(localStorage.getItem("todos"))
+      console.log(todoLocal)
+      setTodos(todoLocal)
     }
   }
 
